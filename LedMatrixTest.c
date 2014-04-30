@@ -9,9 +9,9 @@
 #include "Clock.h"
 #include "Configuration.h"
 
-#define CIRCLEX0 19	
-#define CIRCLEY0 7
-#define CIRCLER 7
+#define CIRCLEX0 15
+#define CIRCLEY0 8
+#define CIRCLER 8
 
 
 extern void UART0_Init (char modo);
@@ -33,6 +33,21 @@ static volatile uint16_t sec =0;
 uint8_t C = CIRCLEX0;
 uint8_t O = CIRCLEY0;
 uint8_t L = CIRCLER;
+
+uint8_t clockMinuteHandMatrix2[12][4] = {{0,-CIRCLER,0,0}, //12
+								 	   	 {-4,-7,0,0}, //1
+								 	     {-7,-4,0,0}, //2
+								 	     {-CIRCLER,0,0,0}, //3
+								 	     {0,-CIRCLER,0,0}, //4
+								 	     {0,-CIRCLER,0,0}, //5
+								 	     {0,CIRCLER,0,0}, //6
+								 	     {0,-CIRCLER,0,0}, //7
+								 	     {0,-CIRCLER,0,0}, //8
+								 	     {0,-CIRCLER,0,0}, //9
+								 	     {0,-CIRCLER,0,0}, //10
+								 	     {0,-CIRCLER,0,0}}; //11
+								 	    
+
 
 uint8_t clockMinuteHandMatrix[12][12] = {{3,8,8,8,8,8,8,8,8,8,8,8},
 								 	     {8,3,8,8,8,8,8,8,8,8,8,8},
@@ -97,13 +112,14 @@ int main( void ){
 	PORTD = 0x00;     /* presentar valor inicial en puerto PORTD= 00000000 */
 
 	UART0_Init(0x01);
-	min = 6;
+	min = 12;
 	hora = 3;
 	Timer2_OneSecIni();
+	Timer1_Ini();
 
 	while(1){
 		
-		PORTB &= ~(1<<1);
+//		PORTB &= ~(1<<1); //OE on
 		drawCircle(C, O, 1, L);
 //		drawLetter(32, 19, 'F', 0, 7);
 /*
@@ -112,23 +128,27 @@ int main( void ){
 		paintPixel(12, 12, 7);
 */
 
-/*
-
-		drawLetter(32, 19, 'F', 0, 7);
-		drawLetter(28, 19, 'U', 0, 7);
-		drawLetter(24, 19, 'I', 0, 7);
-		drawLetter(19, 19, 'X', 0, 7);
-
+		drawLetter(30, 19, 'R', 0, 5);
+		drawLetter(26, 19, 'E', 0, 5);
+		drawLetter(22, 19, 'L', 0, 5);
+		drawLetter(18, 19, 'O', 0, 5);
+		drawLetter(14, 19, 'J', 0, 5);
+		drawLetter(9, 19, 'E', 0, 4);
+		drawLetter(5, 19, 'N', 0, 4);
 		
-		drawLetter(32, 25, 'C', 0, 7);
-		drawLetter(28, 25, 'A', 0, 7);
-		drawLetter(24, 25, 'F', 0, 7);
-		drawLetter(20, 25, 'E', 0, 7);
+		drawLetter(30, 25, 'P', 0, 6);
+		drawLetter(26, 25, 'R', 0, 6);
+		drawLetter(22, 25, 'O', 0, 6);
+		drawLetter(18, 25, 'C', 0, 6);
+		drawLetter(14, 25, 'E', 0, 6);
+		drawLetter(10, 25, 'S', 0, 6);
+		drawLetter(6, 25, 'O', 0, 6);
 
-*/
+		//drawLetter(C-5, O-L+2, 'x', 1, 7);
+		//drawLetter(20, 25, 'E', 0, 7);
 		
-		drawVerticalLine(C, O-5, min12, L-2); // 12
-		drawDiagonal2(C-3, O-5, min1, L-3); //1
+		//drawVerticalLine(C, O-L+2, 3, L-3); // 12
+		/*drawDiagonal2(C-3, O-5, min1, L-3); //1
 		drawDiagonal3(C-5, O-3, min2, L-3);//2
 		drawHorizontalLine(C-5, O, min3, L-2);// 3
 		drawCounterDiagonal3(C, O, min4, L-2);//4
@@ -145,11 +165,17 @@ int main( void ){
 		drawHorizontalLine(16, 30, mLED3, 3);
 		drawHorizontalLine(16, 30, mLED4, 4);
 		
-		drawVerticalLine(C, O-5, hr12, L-4); // 12
+		drawVerticalLine(C, O-L-4, hr12, L-4); // 12
 		drawDiagonal2(C-3, O-5, hr1, L-5); //1
 		drawDiagonal3(C-2, O-2, hr2, L-5);//2
-		drawHorizontalLine(C-5, O, hr3, L-4);// 3
-		drawCounterDiagonal3(C, O, hr4, L-4);//4
+		*/
+		HourHand(C+clockMinuteHandMatrix2[m5][0],O+clockMinuteHandMatrix2[m5][1], C+clockMinuteHandMatrix2[m5][2], O+clockMinuteHandMatrix2[m5][3], 7);
+		
+	//	Line(C, O,C-4,O-7,4);
+		//Line( C, O, C-5,O-4, 5);
+		
+		drawHorizontalLine(C, O, 2, L-4);// 3
+		/*drawCounterDiagonal3(C, O, hr4, L-4);//4
 		drawCounterDiagonal2(C, O, hr5, L-4); //5
 		drawVerticalLine(C, O+2, hr6, L-4); // 6
 		drawDiagonal2(C, O, hr7, L-4);//7
@@ -160,10 +186,16 @@ int main( void ){
 
 		min12 = clockMinuteHandMatrix[min][0];
 		hr12 = clockHourHandMatrix[hora][0];
-		
+	*/
+/*
+		mLED1 = minuteLEDMatrix[m5][0];
+		mLED2 = minuteLEDMatrix[m5][1];
+		mLED3 = minuteLEDMatrix[m5][2];
+		mLED4 = minuteLEDMatrix[m5][3];
+*/
 		if(Timer2_Flag()){
-			//Display();
 			SecondPassed(C, O);
+		
 			Clock_Update();
 			sec++;
 			i++;
@@ -176,17 +208,14 @@ int main( void ){
 				
 				i=1;
 			}
-			if(m5 == 5){
+			if(m5 == 12){
 				min++;
 				m5=0;
 			}
 		}
 		
-		mLED1 = minuteLEDMatrix[m5][0];
-		mLED2 = minuteLEDMatrix[m5][1];
-		mLED3 = minuteLEDMatrix[m5][2];
-		mLED4 = minuteLEDMatrix[m5][3];
-
+		
+/*
 		min1 = clockMinuteHandMatrix[min][1];
 		min2 = clockMinuteHandMatrix[min][2];
 		min3 = clockMinuteHandMatrix[min][3];
@@ -218,7 +247,7 @@ int main( void ){
 		hr10 = clockHourHandMatrix[hora][10];
 		hr11 = clockHourHandMatrix[hora][11];
 		hr12 = clockHourHandMatrix[hora][0];
-
+*/
 		if(hora==12)
 		{
 			hora=0;

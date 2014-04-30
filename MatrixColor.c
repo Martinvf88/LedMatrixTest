@@ -89,7 +89,7 @@ void setColorPixel(uint8_t color){ //1 Red, 2 Green, 3 Blue, 4 yellow-ish, 5 Pur
 
        		break;
 
-		case 8 :
+		default :
 
        		PORTD &=~ (1<<2); //R0
 			PORTD &=~ (1<<3); //G0
