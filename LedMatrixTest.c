@@ -9,9 +9,9 @@
 #include "Clock.h"
 #include "Configuration.h"
 
-#define CIRCLEX0 15
-#define CIRCLEY0 8
-#define CIRCLER 8
+#define CIRCLEX0 19
+#define CIRCLEY0 7
+#define CIRCLER 7
 
 
 extern void UART0_Init (char modo);
@@ -34,18 +34,18 @@ uint8_t C = CIRCLEX0;
 uint8_t O = CIRCLEY0;
 uint8_t L = CIRCLER;
 
-uint8_t clockMinuteHandMatrix2[12][4] = {{0,-CIRCLER,0,0}, //12
-								 	   	 {-4,-7,0,0}, //1
-								 	     {-7,-4,0,0}, //2
-								 	     {-CIRCLER,0,0,0}, //3
-								 	     {0,-CIRCLER,0,0}, //4
-								 	     {0,-CIRCLER,0,0}, //5
-								 	     {0,CIRCLER,0,0}, //6
-								 	     {0,-CIRCLER,0,0}, //7
-								 	     {0,-CIRCLER,0,0}, //8
-								 	     {0,-CIRCLER,0,0}, //9
-								 	     {0,-CIRCLER,0,0}, //10
-								 	     {0,-CIRCLER,0,0}}; //11
+uint8_t clockMinuteHandMatrix2[12][2] = {{CIRCLEX0,CIRCLEY0-CIRCLER+2}, //12
+								 	     {CIRCLEX0-4,CIRCLEY0-CIRCLER+1},//1
+								 	   	 {CIRCLEX0-CIRCLER+3,CIRCLEY0-CIRCLER+3}, //2
+								 	     {CIRCLEX0-CIRCLER+2,CIRCLEY0}, //3
+								 	     {CIRCLEX0-CIRCLER+3,CIRCLEY0+CIRCLER}, //4
+								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //5
+								 	     {CIRCLEX0,CIRCLEY0+CIRCLER}, //6
+								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //7
+								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //8
+								 	     {CIRCLEX0+CIRCLER-2,CIRCLEY0}, //9
+								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //10
+								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}}; //11
 								 	    
 
 
@@ -127,7 +127,7 @@ int main( void ){
 		paintPixel(27, 16, 2);
 		paintPixel(12, 12, 7);
 */
-
+/*
 		drawLetter(30, 19, 'R', 0, 5);
 		drawLetter(26, 19, 'E', 0, 5);
 		drawLetter(22, 19, 'L', 0, 5);
@@ -143,7 +143,7 @@ int main( void ){
 		drawLetter(14, 25, 'E', 0, 6);
 		drawLetter(10, 25, 'S', 0, 6);
 		drawLetter(6, 25, 'O', 0, 6);
-
+*/
 		//drawLetter(C-5, O-L+2, 'x', 1, 7);
 		//drawLetter(20, 25, 'E', 0, 7);
 		
@@ -169,12 +169,16 @@ int main( void ){
 		drawDiagonal2(C-3, O-5, hr1, L-5); //1
 		drawDiagonal3(C-2, O-2, hr2, L-5);//2
 		*/
-		HourHand(C+clockMinuteHandMatrix2[m5][0],O+clockMinuteHandMatrix2[m5][1], C+clockMinuteHandMatrix2[m5][2], O+clockMinuteHandMatrix2[m5][3], 7);
-		
-	//	Line(C, O,C-4,O-7,4);
+	
+		//HourHand(C,O,clockMinuteHandMatrix2[m5][0],clockMinuteHandMatrix2[m5][1], 2);	
+		if(m5 == 0 && sec==0){
+			HourHand(C,O,clockMinuteHandMatrix2[m5][0],clockMinuteHandMatrix2[m5][1], 2);
+		}	
+				
+		Line(C+1, O,C+4,O,4);
 		//Line( C, O, C-5,O-4, 5);
 		
-		drawHorizontalLine(C, O, 2, L-4);// 3
+		//Line(C, O, C+5, O-3,7);// 3
 		/*drawCounterDiagonal3(C, O, hr4, L-4);//4
 		drawCounterDiagonal2(C, O, hr5, L-4); //5
 		drawVerticalLine(C, O+2, hr6, L-4); // 6
@@ -199,9 +203,10 @@ int main( void ){
 			Clock_Update();
 			sec++;
 			i++;
+		
 			if (sec == 60){
 				m5++;
-				
+				HourHand(C,O,clockMinuteHandMatrix2[m5][0],clockMinuteHandMatrix2[m5][1], 2);
 				sec=1;
 			}
 			if(i == 8){

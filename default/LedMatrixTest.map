@@ -2,12 +2,16 @@ Archive member included because of file (symbol)
 
 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
                               Clock.o (__udivmodqi4)
+c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_divmodhi4.o)
+                              MatrixGraphs.o (__divmodhi4)
 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
                               c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/../../../../avr/lib/avr5/crtm328p.o (exit)
 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
                               LedMatrixTest.o (__do_copy_data)
 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
                               LedMatrixTest.o (__do_clear_bss)
+c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodhi4.o)
+                              c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_divmodhi4.o) (__udivmodhi4)
 
 Allocating common symbols
 Common symbol       size              file
@@ -137,7 +141,7 @@ LOAD c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x1756
+.text           0x00000000     0x154e
  *(.vectors)
  .vectors       0x00000000       0x68 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/../../../../avr/lib/avr5/crtm328p.o
                 0x00000000                __vectors
@@ -221,85 +225,87 @@ LOAD c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a
                 0x000006f6                __vector_16
                 0x000006f6                __vector_18
                 0x000006f6                __vector_20
- .text          0x000006fa      0x26e LedMatrixTest.o
+ .text          0x000006fa      0x1b6 LedMatrixTest.o
                 0x00000726                SecondPassed
                 0x00000750                main
                 0x000006fa                cleanLatch
- .text          0x00000968       0x94 Timer1.o
-                0x00000996                Timer1_Flag
-                0x000009b0                __vector_13
-                0x00000968                Timer1_Ini
- .text          0x000009fc       0x80 MatrixColor.o
-                0x000009fc                setColorPixel
- .text          0x00000a7c      0x79e MatrixGraphs.o
-                0x00000f66                HourHand
-                0x00000cdc                drawDiagonal
-                0x00000eb6                drawVerticalLine
-                0x00000e00                drawCounterDiagonal3
-                0x00000e60                drawHorizontalLine
-                0x00000d36                drawCounterDiagonal
-                0x00000d94                drawCounterDiagonal2
-                0x00000aa2                drawLetter
-                0x00000a7c                paintPixel
-                0x00000fe4                drawCircle
-                0x0000120a                CleanMatrix
-                0x00000bb0                Line
-                0x00000c24                drawDiagonal2
-                0x00000f0c                drawSquare
-                0x00000c80                drawDiagonal3
-                0x00001190                Display
- .text          0x0000121a       0x4a Delay20.o
-                0x0000121a                Delay_20mS
- .text          0x00001264      0x118 UART0.o
-                0x00001344                putWordHex
-                0x0000135c                boton
-                0x00001264                UART0_Init
-                0x00001304                putByteHex
-                0x000012ee                UART0_puts
-                0x000012c2                UART0_getch
-                0x000012e8                UART0_kbhit
-                0x0000129e                UART0_putchar
-                0x000012d4                UART0_getche
- .text          0x0000137c       0x9e Timer2.o
-                0x000013d6                Timer2_Flag
-                0x000013e6                __vector_7
-                0x000013ac                Timer2_OneSecIni
-                0x0000137c                Timer2_Ini
- .text          0x0000141a       0x20 SetIntClk.o
-                0x0000141a                SetIntClk_2MHz
- .text          0x0000143a      0x1ac Clock.o
-                0x00001586                Clock_Display
-                0x0000148c                BCD_Value
-                0x00001546                CurrentTime
-                0x0000143a                Clock_Ini
-                0x00001448                Clock_Update
-                0x000014dc                BCD_Time
- .text          0x000015e6       0x24 EEPROM.o
-                0x000015fc                EEPROM_Read
-                0x000015ee                EEPROM_Write
-                0x000015e6                EEPROM_Ini
- .text          0x0000160a      0x132 Configuration.o
-                0x000016b0                clrscr
-                0x0000162c                TextMenu
-                0x0000160a                UART0_putsf
-                0x000016ca                TextSave
-                0x0000164e                gotoxy
- .text          0x0000173c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
- .text          0x0000173c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
- .text          0x0000173c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
- .text          0x0000173c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
-                0x0000173c                . = ALIGN (0x2)
+ .text          0x000008b0       0x94 Timer1.o
+                0x000008de                Timer1_Flag
+                0x000008f8                __vector_13
+                0x000008b0                Timer1_Ini
+ .text          0x00000944       0x80 MatrixColor.o
+                0x00000944                setColorPixel
+ .text          0x000009c4      0x600 MatrixGraphs.o
+                0x00000c1c                HourHand
+                0x00000cdc                drawVerticalLine
+                0x00000af8                swap
+                0x00000c86                drawHorizontalLine
+                0x000009ea                drawLetter
+                0x000009c4                paintPixel
+                0x00000d8c                drawCircle
+                0x00000fb4                CleanMatrix
+                0x00000b10                Line
+                0x00000d32                drawSquare
+                0x00000f3a                Display
+ .text          0x00000fc4       0x4a Delay20.o
+                0x00000fc4                Delay_20mS
+ .text          0x0000100e      0x118 UART0.o
+                0x000010ee                putWordHex
+                0x00001106                boton
+                0x0000100e                UART0_Init
+                0x000010ae                putByteHex
+                0x00001098                UART0_puts
+                0x0000106c                UART0_getch
+                0x00001092                UART0_kbhit
+                0x00001048                UART0_putchar
+                0x0000107e                UART0_getche
+ .text          0x00001126       0x9e Timer2.o
+                0x00001180                Timer2_Flag
+                0x00001190                __vector_7
+                0x00001156                Timer2_OneSecIni
+                0x00001126                Timer2_Ini
+ .text          0x000011c4       0x20 SetIntClk.o
+                0x000011c4                SetIntClk_2MHz
+ .text          0x000011e4      0x1ac Clock.o
+                0x00001330                Clock_Display
+                0x00001236                BCD_Value
+                0x000012f0                CurrentTime
+                0x000011e4                Clock_Ini
+                0x000011f2                Clock_Update
+                0x00001286                BCD_Time
+ .text          0x00001390       0x24 EEPROM.o
+                0x000013a6                EEPROM_Read
+                0x00001398                EEPROM_Write
+                0x00001390                EEPROM_Ini
+ .text          0x000013b4      0x132 Configuration.o
+                0x0000145a                clrscr
+                0x000013d6                TextMenu
+                0x000013b4                UART0_putsf
+                0x00001474                TextSave
+                0x000013f8                gotoxy
+ .text          0x000014e6        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
+ .text          0x000014e6        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_divmodhi4.o)
+ .text          0x000014e6        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
+ .text          0x000014e6        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
+ .text          0x000014e6        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
+ .text          0x000014e6        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodhi4.o)
+                0x000014e6                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x0000173c       0x18 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
-                0x0000173c                __udivmodqi4
- .text.libgcc   0x00001754        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
- .text.libgcc   0x00001754        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
- .text.libgcc   0x00001754        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
-                0x00001754                . = ALIGN (0x2)
+ .text.libgcc   0x000014e6       0x18 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
+                0x000014e6                __udivmodqi4
+ .text.libgcc   0x000014fe       0x26 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_divmodhi4.o)
+                0x000014fe                __divmodhi4
+                0x000014fe                _div
+ .text.libgcc   0x00001524        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x00001524        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00001524        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00001524       0x28 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodhi4.o)
+                0x00001524                __udivmodhi4
+                0x0000154c                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00001754        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
-                0x00001754                exit
-                0x00001754                _exit
+ .fini9         0x0000154c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
+                0x0000154c                exit
+                0x0000154c                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -318,82 +324,86 @@ LOAD c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00001754        0x2 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
+ .fini0         0x0000154c        0x2 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00001756                _etext = .
+                0x0000154e                _etext = .
 
-.data           0x00800100      0x16c load address 0x00001756
+.data           0x00800100      0x154 load address 0x0000154e
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/../../../../avr/lib/avr5/crtm328p.o
- .data          0x00800100      0x16c LedMatrixTest.o
-                0x008001c3                minuteLEDMatrix
+ .data          0x00800100      0x154 LedMatrixTest.o
+                0x008001ab                minuteLEDMatrix
                 0x00800100                C
                 0x00800103                clockMinuteHandMatrix2
                 0x00800101                O
-                0x008001dc                clockHourHandMatrix
+                0x008001c4                clockHourHandMatrix
                 0x00800102                L
-                0x00800133                clockMinuteHandMatrix
- .data          0x0080026c        0x0 Timer1.o
- .data          0x0080026c        0x0 MatrixColor.o
- .data          0x0080026c        0x0 MatrixGraphs.o
- .data          0x0080026c        0x0 Delay20.o
- .data          0x0080026c        0x0 UART0.o
- .data          0x0080026c        0x0 Timer2.o
- .data          0x0080026c        0x0 SetIntClk.o
- .data          0x0080026c        0x0 Clock.o
- .data          0x0080026c        0x0 EEPROM.o
- .data          0x0080026c        0x0 Configuration.o
- .data          0x0080026c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
- .data          0x0080026c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
- .data          0x0080026c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
- .data          0x0080026c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
+                0x0080011b                clockMinuteHandMatrix
+ .data          0x00800254        0x0 Timer1.o
+ .data          0x00800254        0x0 MatrixColor.o
+ .data          0x00800254        0x0 MatrixGraphs.o
+ .data          0x00800254        0x0 Delay20.o
+ .data          0x00800254        0x0 UART0.o
+ .data          0x00800254        0x0 Timer2.o
+ .data          0x00800254        0x0 SetIntClk.o
+ .data          0x00800254        0x0 Clock.o
+ .data          0x00800254        0x0 EEPROM.o
+ .data          0x00800254        0x0 Configuration.o
+ .data          0x00800254        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
+ .data          0x00800254        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_divmodhi4.o)
+ .data          0x00800254        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
+ .data          0x00800254        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
+ .data          0x00800254        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
+ .data          0x00800254        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodhi4.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x0080026c                . = ALIGN (0x2)
-                0x0080026c                _edata = .
-                0x0080026c                PROVIDE (__data_end, .)
+                0x00800254                . = ALIGN (0x2)
+                0x00800254                _edata = .
+                0x00800254                PROVIDE (__data_end, .)
 
-.bss            0x0080026c      0x41b load address 0x000018c2
-                0x0080026c                PROVIDE (__bss_start, .)
+.bss            0x00800254      0x41d load address 0x000016a2
+                0x00800254                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x0080026c        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/../../../../avr/lib/avr5/crtm328p.o
- .bss           0x0080026c        0x6 LedMatrixTest.o
- .bss           0x00800272        0x1 Timer1.o
- .bss           0x00800273        0x0 MatrixColor.o
- .bss           0x00800273      0x402 MatrixGraphs.o
-                0x00800273                matrixBuffer
- .bss           0x00800675        0x0 Delay20.o
- .bss           0x00800675        0x0 UART0.o
- .bss           0x00800675        0x2 Timer2.o
- .bss           0x00800677        0x0 SetIntClk.o
- .bss           0x00800677        0x6 Clock.o
- .bss           0x0080067d        0x0 EEPROM.o
- .bss           0x0080067d        0x0 Configuration.o
- .bss           0x0080067d        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
- .bss           0x0080067d        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
- .bss           0x0080067d        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
- .bss           0x0080067d        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x00800254        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/../../../../avr/lib/avr5/crtm328p.o
+ .bss           0x00800254        0x6 LedMatrixTest.o
+ .bss           0x0080025a        0x1 Timer1.o
+ .bss           0x0080025b        0x0 MatrixColor.o
+ .bss           0x0080025b      0x404 MatrixGraphs.o
+                0x0080025b                matrixBuffer
+ .bss           0x0080065f        0x0 Delay20.o
+ .bss           0x0080065f        0x0 UART0.o
+ .bss           0x0080065f        0x2 Timer2.o
+ .bss           0x00800661        0x0 SetIntClk.o
+ .bss           0x00800661        0x6 Clock.o
+ .bss           0x00800667        0x0 EEPROM.o
+ .bss           0x00800667        0x0 Configuration.o
+ .bss           0x00800667        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodqi4.o)
+ .bss           0x00800667        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_divmodhi4.o)
+ .bss           0x00800667        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_exit.o)
+ .bss           0x00800667        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_copy_data.o)
+ .bss           0x00800667        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x00800667        0x0 c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a(_udivmodhi4.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x0080067d        0x2 MatrixGraphs.o
-                0x0080067d                ptr
- COMMON         0x0080067f        0x8 Configuration.o
-                0x0080067f                temp_node_name
-                0x00800685                exit_menu
-                0x00800686                cuentas
-                0x00800687                PROVIDE (__bss_end, .)
-                0x00001756                __data_load_start = LOADADDR (.data)
-                0x000018c2                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800667        0x2 MatrixGraphs.o
+                0x00800667                ptr
+ COMMON         0x00800669        0x8 Configuration.o
+                0x00800669                temp_node_name
+                0x0080066f                exit_menu
+                0x00800670                cuentas
+                0x00800671                PROVIDE (__bss_end, .)
+                0x0000154e                __data_load_start = LOADADDR (.data)
+                0x000016a2                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800687        0x0
-                0x00800687                PROVIDE (__noinit_start, .)
+.noinit         0x00800671        0x0
+                0x00800671                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800687                PROVIDE (__noinit_end, .)
-                0x00800687                _end = .
-                0x00800687                PROVIDE (__heap_start, .)
+                0x00800671                PROVIDE (__noinit_end, .)
+                0x00800671                _end = .
+                0x00800671                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -470,7 +480,7 @@ LOAD c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a
                 0x00000120       0x20 Configuration.o
 
 .debug_pubnames
-                0x00000000      0x437
+                0x00000000      0x3c1
  *(.debug_pubnames)
  .debug_pubnames
                 0x00000000       0xae LedMatrixTest.o
@@ -479,74 +489,74 @@ LOAD c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a
  .debug_pubnames
                 0x000000ef       0x24 MatrixColor.o
  .debug_pubnames
-                0x00000113      0x150 MatrixGraphs.o
+                0x00000113       0xda MatrixGraphs.o
  .debug_pubnames
-                0x00000263       0x21 Delay20.o
+                0x000001ed       0x21 Delay20.o
  .debug_pubnames
-                0x00000284       0x55 Timer2.o
+                0x0000020e       0x55 Timer2.o
  .debug_pubnames
-                0x000002d9       0x25 SetIntClk.o
+                0x00000263       0x25 SetIntClk.o
  .debug_pubnames
-                0x000002fe       0x6e Clock.o
+                0x00000288       0x6e Clock.o
  .debug_pubnames
-                0x0000036c       0x42 EEPROM.o
+                0x000002f6       0x42 EEPROM.o
  .debug_pubnames
-                0x000003ae       0x89 Configuration.o
+                0x00000338       0x89 Configuration.o
 
-.debug_info     0x00000000     0x1280
+.debug_info     0x00000000     0x112f
  *(.debug_info)
  .debug_info    0x00000000      0x34e LedMatrixTest.o
  .debug_info    0x0000034e       0xbe Timer1.o
  .debug_info    0x0000040c       0x8b MatrixColor.o
- .debug_info    0x00000497      0x6b8 MatrixGraphs.o
- .debug_info    0x00000b4f       0x9e Delay20.o
- .debug_info    0x00000bed      0x10c Timer2.o
- .debug_info    0x00000cf9       0x71 SetIntClk.o
- .debug_info    0x00000d6a      0x210 Clock.o
- .debug_info    0x00000f7a       0xe7 EEPROM.o
- .debug_info    0x00001061      0x21f Configuration.o
+ .debug_info    0x00000497      0x567 MatrixGraphs.o
+ .debug_info    0x000009fe       0x9e Delay20.o
+ .debug_info    0x00000a9c      0x10c Timer2.o
+ .debug_info    0x00000ba8       0x71 SetIntClk.o
+ .debug_info    0x00000c19      0x210 Clock.o
+ .debug_info    0x00000e29       0xe7 EEPROM.o
+ .debug_info    0x00000f10      0x21f Configuration.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x796
+.debug_abbrev   0x00000000      0x79c
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x125 LedMatrixTest.o
  .debug_abbrev  0x00000125       0x8c Timer1.o
  .debug_abbrev  0x000001b1       0x5b MatrixColor.o
- .debug_abbrev  0x0000020c      0x1ae MatrixGraphs.o
- .debug_abbrev  0x000003ba       0x62 Delay20.o
- .debug_abbrev  0x0000041c       0xb0 Timer2.o
- .debug_abbrev  0x000004cc       0x3d SetIntClk.o
- .debug_abbrev  0x00000509       0xe8 Clock.o
- .debug_abbrev  0x000005f1       0xa5 EEPROM.o
- .debug_abbrev  0x00000696      0x100 Configuration.o
+ .debug_abbrev  0x0000020c      0x1b4 MatrixGraphs.o
+ .debug_abbrev  0x000003c0       0x62 Delay20.o
+ .debug_abbrev  0x00000422       0xb0 Timer2.o
+ .debug_abbrev  0x000004d2       0x3d SetIntClk.o
+ .debug_abbrev  0x0000050f       0xe8 Clock.o
+ .debug_abbrev  0x000005f7       0xa5 EEPROM.o
+ .debug_abbrev  0x0000069c      0x100 Configuration.o
 
-.debug_line     0x00000000     0x1448
+.debug_line     0x00000000     0x11c0
  *(.debug_line)
- .debug_line    0x00000000      0x284 LedMatrixTest.o
- .debug_line    0x00000284       0xfa Timer1.o
- .debug_line    0x0000037e      0x1cf MatrixColor.o
- .debug_line    0x0000054d      0x7c4 MatrixGraphs.o
- .debug_line    0x00000d11       0xb3 Delay20.o
- .debug_line    0x00000dc4      0x172 Timer2.o
- .debug_line    0x00000f36       0x8b SetIntClk.o
- .debug_line    0x00000fc1      0x1de Clock.o
- .debug_line    0x0000119f      0x102 EEPROM.o
- .debug_line    0x000012a1      0x1a7 Configuration.o
+ .debug_line    0x00000000      0x224 LedMatrixTest.o
+ .debug_line    0x00000224       0xfa Timer1.o
+ .debug_line    0x0000031e      0x1cf MatrixColor.o
+ .debug_line    0x000004ed      0x59c MatrixGraphs.o
+ .debug_line    0x00000a89       0xb3 Delay20.o
+ .debug_line    0x00000b3c      0x172 Timer2.o
+ .debug_line    0x00000cae       0x8b SetIntClk.o
+ .debug_line    0x00000d39      0x1de Clock.o
+ .debug_line    0x00000f17      0x102 EEPROM.o
+ .debug_line    0x00001019      0x1a7 Configuration.o
 
-.debug_frame    0x00000000      0x350
+.debug_frame    0x00000000      0x300
  *(.debug_frame)
  .debug_frame   0x00000000       0x40 LedMatrixTest.o
  .debug_frame   0x00000040       0x40 Timer1.o
  .debug_frame   0x00000080       0x20 MatrixColor.o
- .debug_frame   0x000000a0      0x110 MatrixGraphs.o
- .debug_frame   0x000001b0       0x20 Delay20.o
- .debug_frame   0x000001d0       0x50 Timer2.o
- .debug_frame   0x00000220       0x20 SetIntClk.o
- .debug_frame   0x00000240       0x70 Clock.o
- .debug_frame   0x000002b0       0x40 EEPROM.o
- .debug_frame   0x000002f0       0x60 Configuration.o
+ .debug_frame   0x000000a0       0xc0 MatrixGraphs.o
+ .debug_frame   0x00000160       0x20 Delay20.o
+ .debug_frame   0x00000180       0x50 Timer2.o
+ .debug_frame   0x000001d0       0x20 SetIntClk.o
+ .debug_frame   0x000001f0       0x70 Clock.o
+ .debug_frame   0x00000260       0x40 EEPROM.o
+ .debug_frame   0x000002a0       0x60 Configuration.o
 
-.debug_str      0x00000000      0x4e6
+.debug_str      0x00000000      0x4a8
  *(.debug_str)
  .debug_str     0x00000000      0x18e LedMatrixTest.o
                                 0x1c2 (size before relaxing)
@@ -554,29 +564,29 @@ LOAD c:/winavr-20071221/bin/../lib/gcc/avr/4.2.2/avr5\libgcc.a
                                  0xf1 (size before relaxing)
  .debug_str     0x000001bd       0x25 MatrixColor.o
                                  0xe2 (size before relaxing)
- .debug_str     0x000001e2      0x131 MatrixGraphs.o
-                                0x212 (size before relaxing)
- .debug_str     0x00000313       0x18 Delay20.o
+ .debug_str     0x000001e2       0xf3 MatrixGraphs.o
+                                0x1d4 (size before relaxing)
+ .debug_str     0x000002d5       0x18 Delay20.o
                                  0xd5 (size before relaxing)
- .debug_str     0x0000032b       0x4b Timer2.o
+ .debug_str     0x000002ed       0x4b Timer2.o
                                 0x10d (size before relaxing)
- .debug_str     0x00000376       0x1e SetIntClk.o
+ .debug_str     0x00000338       0x1e SetIntClk.o
                                  0xd3 (size before relaxing)
- .debug_str     0x00000394       0x9e Clock.o
+ .debug_str     0x00000356       0x9e Clock.o
                                 0x165 (size before relaxing)
- .debug_str     0x00000432       0x35 EEPROM.o
+ .debug_str     0x000003f4       0x35 EEPROM.o
                                  0xfb (size before relaxing)
- .debug_str     0x00000467       0x7f Configuration.o
+ .debug_str     0x00000429       0x7f Configuration.o
                                 0x166 (size before relaxing)
 
-.debug_loc      0x00000000      0x95b
+.debug_loc      0x00000000      0x6df
  *(.debug_loc)
  .debug_loc     0x00000000       0x5a LedMatrixTest.o
- .debug_loc     0x0000005a      0x7cb MatrixGraphs.o
- .debug_loc     0x00000825       0x26 Timer2.o
- .debug_loc     0x0000084b       0x13 Clock.o
- .debug_loc     0x0000085e       0x18 EEPROM.o
- .debug_loc     0x00000876       0xe5 Configuration.o
+ .debug_loc     0x0000005a      0x54f MatrixGraphs.o
+ .debug_loc     0x000005a9       0x26 Timer2.o
+ .debug_loc     0x000005cf       0x13 Clock.o
+ .debug_loc     0x000005e2       0x18 EEPROM.o
+ .debug_loc     0x000005fa       0xe5 Configuration.o
 
 .debug_macinfo
  *(.debug_macinfo)

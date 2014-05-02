@@ -45,6 +45,9 @@ uint8_t matrixBuffer[32][32] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 static volatile uint8_t i =0;
 static volatile uint8_t j =0;
 
+static volatile uint8_t lastX =0;
+static volatile uint8_t lastY =0;
+
 void CleanMatrix(){
 
 	memset(matrixBuffer,0,sizeof(matrixBuffer));
@@ -53,32 +56,7 @@ void paintPixel(uint8_t x, uint8_t y, uint8_t color){
 
 	ptr = &matrixBuffer[0][0];
 	ptr[x+(32 * y)] =color;
-//	uint8_t loop;
-	
-	//setColorPixel(color);
-
-
-/*
-//	PORTB &= ~(1<<3); //SCLK on
-
-	 PORTC = y;
-
-//	PORTB |= (1<<3); //SCLK OFF
-
-	PORTD &= ~(1<<2); //R0
-	PORTD &= ~(1<<3); //G0
-	PORTD &= ~(1<<4); //B0
-	PORTD &= ~(1<<5); //R1
-	PORTD &= ~(1<<6); //G1
-	PORTD &= ~(1<<7); //B1
-
-
-	for(loop = 0; loop<x; loop++)
-	{
-		PORTB &= ~(1<<3); //SCLK OFF	
-		PORTB |= (1<<3); //SCLK OFF
-	}
-*/}
+}
 
 void drawLetter(uint8_t x0, uint8_t y0, uint16_t letter, uint8_t lettercase,uint8_t color){
 
@@ -104,33 +82,48 @@ void drawLetter(uint8_t x0, uint8_t y0, uint16_t letter, uint8_t lettercase,uint
 			PORTB |= (1<<2);
 		}
 	}
-/*
-	for(i=0;i<32;i++){
-		for(j=0;j<32;j++){
-			PORTB &= ~(1<<2);
-			paintPixel(i,j,(matrixBuffer[j*i]));
-			PORTB |= (1<<2);
-		}
-	}*/
 }
 
-void Line(uint8_t x0,uint8_t y0, uint8_t x1, uint8_t y1, uint8_t color){
-uint8_t  x,y,dx,dy,D;
-dx = x1 - x0;
-dy = y1 - y0;
+void swap(int *a, int *b){
+	int c;
+	c=*b;
+	*b=*a;
+	*a=c;
+}
 
-  D = 2*dy - dx;
-  paintPixel(x0,y0,color);
-  y=y0;
-  for (x =x0;x< x1; x++)
-    if (D > 0){
-      y = y+1;
-      paintPixel(x,y,color);
-      D = D + (2*dy-2*dx);
-    }
-	else{
-     paintPixel(x,y,color);
-     D = D + (2*dy);
+void Line(int x0,int y0, int x1, int y1, uint8_t color){
+
+	int paso, deltax, deltay, error, ystep, y, x;
+	if(abs(y1-y0)>abs(x1-x0))
+		paso=1;
+		else
+		paso=0;
+	if (paso == 1) {
+		swap(&x0,&y0);
+		swap(&x1,&y1);
+	}
+	if (x0>x1) {
+		swap(&x0,&x1);
+		swap(&y0,&y1);
+	}
+	deltax = x1 - x0;
+	deltay = abs(y1-y0);
+	error = deltax/2;
+	y=y0;
+	if (y0<y1)
+		ystep=1;
+		else
+		ystep=-1;
+	for (x=x0; x<=x1; x++){
+		if (paso==1)
+			paintPixel(y,x,color);
+			else
+			paintPixel(x,y,color);
+		error = error - deltay;
+		if (error < 0) {
+			y=y+ystep;
+			error=error+deltax;
+		}
 	}
 }
 void Display(){
@@ -138,10 +131,8 @@ void Display(){
 	PORTC = i;
 	PORTB |= (1<<2);
 	PORTB |= (1<<1); //OE on	
-	//for(i=0;i<32;i++){
 		for(j=0;j<32;j++){
 			setColorPixel(matrixBuffer[i][31-j]);
-		//	paintPixel(i,j,(matrixBuffer[j*i]));
 			if (i <= 15){
 				
 				PORTD &= ~(1<<5); //R1
@@ -162,7 +153,6 @@ void Display(){
 			PORTB &= ~(1<<3); //SCLK on		
 		
 		}
-	//}
 	i++;
 	if(i==32){
 		i=0;
@@ -174,21 +164,14 @@ void Display(){
 
 void HourHand(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1,uint8_t color){
 
-	if(x0==x1){
-		
-		drawVerticalLine(x0,y0,color,abs(y1-y0));
-		
-		}
+	if(lastX!=0 && lastY !=0){	
+		Line(x0,y0,lastX,lastY,0);
+	}	
 
-	if(y0==y1){
-		
-		drawHorizontalLine(x0,y0,color,abs(x1-x0));
-		
-		}
-
-	else{
-	drawDiagonal2(x0, y0, color, abs(x1-x0));
-	}
+	Line(x0,y0,x1,y1,color);
+	
+	lastX = x1;
+	lastY = y1;
 }
 
 
@@ -208,180 +191,6 @@ void drawSquare(uint8_t x0, uint8_t y0, uint8_t color, uint8_t length){
 	PORTB |= (1<<2);
 }
 
-void drawDiagonal2(uint8_t x0, uint8_t y0, uint8_t color, uint8_t lenght){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<lenght; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		
-		PORTB |= (1<<2);
-		paintPixel(x0+i,y0+(i*2),color);
-		PORTB &= ~(1<<2);
-		//PORTB |= (1<<3); //SCLK on
-		
-	}
-
-}
-
-void drawDiagonal3(uint8_t x0, uint8_t y0, uint8_t color, uint8_t lenght){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<lenght; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		
-		PORTB |= (1<<2);
-		paintPixel(x0+(i*2),y0+i,color);
-		PORTB &= ~(1<<2);
-		//PORTB |= (1<<3); //SCLK on
-		
-	}
-
-}
-
-
-void drawDiagonal(uint8_t x0, uint8_t y0, uint8_t color, uint8_t lenght){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<lenght; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		
-		PORTB |= (1<<2);
-		paintPixel(x0+i,y0+i,color);
-		PORTB &= ~(1<<2);
-		//PORTB |= (1<<3); //SCLK on
-		
-	}
-
-}
-
-void drawCounterDiagonal(uint8_t x0, uint8_t y0, uint8_t color, uint8_t x1){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<x1; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		PORTB |= (1<<2);
-		paintPixel(x0-i,y0+i,color);
-		PORTB &= ~(1<<2);
-		
-		//PORTB |= (1<<3); //SCLK on
-	
-	}
-
-}
-
-void drawCounterDiagonal2(uint8_t x0, uint8_t y0, uint8_t color, uint8_t x1){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<x1 -1; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		PORTB |= (1<<2);
-		paintPixel(x0-i,y0+(i*2),color);
-		PORTB &= ~(1<<2);
-		
-		//PORTB |= (1<<3); //SCLK on
-	
-	}
-
-}
-
-void drawCounterDiagonal3(uint8_t x0, uint8_t y0, uint8_t color, uint8_t x1){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<x1; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		PORTB |= (1<<2);
-		paintPixel(x0-(i*2),y0+i,color);
-		PORTB &= ~(1<<2);
-		
-		//PORTB |= (1<<3); //SCLK on
-	
-	}
-
-}
 void drawHorizontalLine(uint8_t x0, uint8_t y0, uint8_t color, uint8_t x1){
 
 	//setColorPixel(color);
@@ -508,3 +317,4 @@ void drawCircle(int16_t x0, int16_t y0, int16_t color, uint16_t r) {
 			
 	}
 }
+
