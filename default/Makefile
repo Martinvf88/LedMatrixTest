@@ -35,7 +35,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = LedMatrixTest.o Timer1.o MatrixColor.o MatrixGraphs.o Delay20.o UART0.o Timer2.o SetIntClk.o Clock.o EEPROM.o Configuration.o 
+OBJECTS = LedMatrixTest.o Timer1.o MatrixColor.o MatrixGraphs.o Delay20.o UART0.o Timer2.o SetIntClk.o Clock.o EEPROM.o Configuration.o Menu.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -75,6 +75,9 @@ EEPROM.o: ../EEPROM.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 Configuration.o: ../Configuration.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+Menu.o: ../Menu.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

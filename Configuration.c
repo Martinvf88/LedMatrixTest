@@ -1,7 +1,10 @@
+#include <avr/pgmspace.h>
 #include <inttypes.h>
 #include "EEPROM.h"
 #include "Clock.h"
 #include "Configuration.h"
+
+
 extern char UART0_kbhit (void);
 extern char UART0_getch (void);
 extern char UART0_getche (void);
@@ -10,12 +13,23 @@ extern void UART0_puts(const char *str);
 extern void putByteHex(char dato);
 extern void putWordHex (char *str);
 
-#include <avr/pgmspace.h>
+uint8_t exit_menu,cuentas,space,temp_node_name[6];
 
 
-uint8_t exit_menu,cuentas,temp_node_name[6];
-const char Title[] PROGMEM = " Introduzca el Dir. Nodo (byte) y presione enter";
-	void clrscr() //Basado en la info obtenida en ATMEL
+void PortConfig(){
+
+	DDRB = 0x0E;      /* configura de salida los bits 1 al 3 el PORTB  DDRB= 00001110      */ 
+	PORTB = 0x0A;     /* presentar valor inicial en puerto  PORTB= 00000010      */
+
+	DDRC = 0x0F;      /* configura de salida los bits 0 al 3 el PORTC DDRC= 00001111      */ 
+	PORTC = 0x00;     /* presentar valor inicial en puerto PORTC= 00000000      */
+	
+	DDRD = 0xFC;      /* configura de salida los bits 2 al 7 el PORTD DDRD= 11111100      */
+	PORTD = 0x00;     /* presentar valor inicial en puerto PORTD= 00000000 */
+
+}
+
+void clrscr() //Basado en la info obtenida en ATMEL
 {
 	UART0_putchar(0x1B); // ESCAPE
 	UART0_putchar(0x5B); // [
@@ -56,7 +70,7 @@ void TextSave(uint16_t dir)
 	 uint8_t temp_key_node;
 	 cuentas = 0;
 
-	while(cuentas < 6)
+	while(cuentas < 8)
 	{
 		temp_key_node = UART0_getche();
 		if(temp_key_node == 0x08 && cuentas > 0)
@@ -66,19 +80,65 @@ void TextSave(uint16_t dir)
 			gotoxy((0x03 + cuentas -1),0x03);
 			cuentas--;
 		}
-		if(temp_key_node != 0x08)
+		if(temp_key_node != 0x08 && temp_key_node != 0x20)
 		{
 			temp_node_name[cuentas]=temp_key_node;
 			EEPROM_Write(dir,temp_node_name[cuentas]);
 			cuentas++;
 			dir++;
 		}
+		
+		if(temp_key_node == 0x20){
+			temp_node_name[cuentas]=0;
+			EEPROM_Write(dir,temp_node_name[cuentas]);
+			cuentas++;
+			dir++;	
+		}
+		
+		if(temp_key_node == 0x0D){
+			space = 8-cuentas;
+			for (; space<8;space++){
+				temp_node_name[space]=0;
+				EEPROM_Write(dir,temp_node_name[space]);
+			}
+			cuentas = 8;
+		}
 	}
 	UART0_getch();
 }
-void TextMenu(){
-	exit_menu = 0;
-	while(exit_menu ==0){
-		UART0_putsf(Title);
+
+
+void config_clock()
+{
+	char tecla1_hr, tecla1_min, tecla2_hr, tecla2_min,hora,min;
+
+	tecla1_hr =UART0_getche();
+	if(tecla1_hr > 0x31)
+	{
+		tecla1_hr = 0x30; //automatico el 0
 	}
+	tecla2_hr = UART0_getche();
+	
+	if(tecla1_hr >= 0x31 && tecla2_hr > 0x31 )
+	{
+		tecla2_hr = 0x30; //automatico el 0//error
+		tecla1_hr = 0x30; //automatico el 0
+	}
+	UART0_putchar(':');
+ 	tecla1_min = UART0_getche();
+	
+	if(tecla1_min > 0x35)
+	{
+		tecla1_min = 0x30; //automatico el 0
+	}
+	
+	tecla2_min =UART0_getche();
+	
+	hora = 10*(tecla1_hr -0x30) + (tecla2_hr - 0x30);
+	min = 10*(tecla1_min -0x30) + (tecla2_min - 0x30);
+
+	Clock_Ini(hora,min,0);
+	Clock_Update();
+
+	
 }

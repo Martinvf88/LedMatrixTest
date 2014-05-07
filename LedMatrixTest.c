@@ -3,15 +3,14 @@
 #include <math.h>
 #include "MatrixColor.h"
 #include "MatrixGraphs.h"
+#include "ClockCoordinates.h"
 #include "Timer2.h"
 #include "Timer1.h"
+#include "Configuration.h"
 #include "Delay20.h"
 #include "Clock.h"
-#include "Configuration.h"
-
-#define CIRCLEX0 19
-#define CIRCLEY0 7
-#define CIRCLER 7
+#include "Menu.h"
+#include "EEPROM.h"
 
 
 extern void UART0_Init (char modo);
@@ -22,241 +21,194 @@ extern void UART0_puts(const char *str);
 extern void putByteHex(char dato);
 extern void putWordHex (char *str);
 
-void cleanLatch(uint8_t x);
 void SecondPassed(uint8_t x, uint8_t y);
+int button_pressed(void);
+int button_pressed2(void);
+int button_pressed3(void);
 
-static volatile uint8_t min1, min2, min3, min4, min5, min6, min7, min8, min9, min10, min11, min12 =0;
-static volatile uint8_t hr1, hr2, hr3, hr4, hr5, hr6, hr7, hr8, hr9, hr10, hr11, hr12 =0;
-static volatile uint8_t min, hora ,i, m5,mLED1,mLED2,mLED3,mLED4, retardo,teclazo =0;
-static volatile uint16_t sec =0;
+
+static volatile uint8_t  count, advance, j, retardo,teclazo =0;
+static volatile uint16_t address =0;
+
 
 uint8_t C = CIRCLEX0;
 uint8_t O = CIRCLEY0;
 uint8_t L = CIRCLER;
-
-uint8_t clockMinuteHandMatrix2[12][2] = {{CIRCLEX0,CIRCLEY0-CIRCLER+2}, //12
-								 	     {CIRCLEX0-4,CIRCLEY0-CIRCLER+1},//1
-								 	   	 {CIRCLEX0-CIRCLER+3,CIRCLEY0-CIRCLER+3}, //2
-								 	     {CIRCLEX0-CIRCLER+2,CIRCLEY0}, //3
-								 	     {CIRCLEX0-CIRCLER+3,CIRCLEY0+CIRCLER}, //4
-								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //5
-								 	     {CIRCLEX0,CIRCLEY0+CIRCLER}, //6
-								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //7
-								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //8
-								 	     {CIRCLEX0+CIRCLER-2,CIRCLEY0}, //9
-								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}, //10
-								 	     {CIRCLEX0+0,CIRCLEY0-CIRCLER}}; //11
-								 	    
-
-
-uint8_t clockMinuteHandMatrix[12][12] = {{3,8,8,8,8,8,8,8,8,8,8,8},
-								 	     {8,3,8,8,8,8,8,8,8,8,8,8},
-								   		 {8,8,3,8,8,8,8,8,8,8,8,8},
-								  		 {8,8,8,3,8,8,8,8,8,8,8,8},
-								  		 {8,8,8,8,3,8,8,8,8,8,8,8},
-								  		 {8,8,8,8,8,3,8,8,8,8,8,8},
-								  		 {8,8,8,8,8,8,3,8,8,8,8,8},
-								  		 {8,8,8,8,8,8,8,3,8,8,8,8},
-								  		 {8,8,8,8,8,8,8,8,3,8,8,8},
-								  		 {8,8,8,8,8,8,8,8,8,3,8,8},
-								  		 {8,8,8,8,8,8,8,8,8,8,3,8},
-								  		 {8,8,8,8,8,8,8,8,8,8,8,3}};
-
-uint8_t minuteLEDMatrix[5][5] = {{8,8,8,8,8},
-								 {4,8,8,8,8},
-								 {4,4,8,8,8},
-								 {4,4,4,8,8},
-								 {4,4,4,4,8}};
-
-uint8_t clockHourHandMatrix[12][12] = {{2,8,8,8,8,8,8,8,8,8,8,8},
-									   {8,2,8,8,8,8,8,8,8,8,8,8},
-									   {8,8,2,8,8,8,8,8,8,8,8,8},
-									   {8,8,8,2,8,8,8,8,8,8,8,8},
-									   {8,8,8,8,2,8,8,8,8,8,8,8},
-									   {8,8,8,8,8,2,8,8,8,8,8,8},
-								  	   {8,8,8,8,8,8,2,8,8,8,8,8},
-								       {8,8,8,8,8,8,8,2,8,8,8,8},
-								       {8,8,8,8,8,8,8,8,2,8,8,8},
-								       {8,8,8,8,8,8,8,8,8,2,8,8},
-								       {8,8,8,8,8,8,8,8,8,8,2,8},
-									   {8,8,8,8,8,8,8,8,8,8,8,2}};
-
-
-
-void cleanLatch(uint8_t x){
-
-	PORTD &= ~(1<<2); //R0
-	PORTD &= ~(1<<3); //G0
-	PORTD &= ~(1<<4); //B0
-	PORTD &= ~(1<<5); //R1
-	PORTD &= ~(1<<6); //G1
-	PORTD &= ~(1<<7); //B1
-
-	for(i = 0; i<x; i++)
-	{
-		PORTB &= ~(1<<3); //SCLK OFF
-		PORTB |= (1<<3); //SCLK OFF
-	}
-}
-
+uint8_t minutes5,seconds,secs,done,mode_flag,modes;			 	   
+tiempoT_t current ;
 
 int main( void ){
 
-	DDRB = 0x0E;      /* configura de salida los bits 1 al 3 el PORTB  DDRB= 00001110      */ 
-	PORTB = 0x0A;     /* presentar valor inicial en puerto  PORTB= 00000010      */
-
-	DDRC = 0x0F;      /* configura de salida los bits 0 al 3 el PORTC DDRC= 00001111      */ 
-	PORTC = 0x00;     /* presentar valor inicial en puerto PORTC= 00000000      */
-	
-	DDRD = 0xFC;      /* configura de salida los bits 2 al 7 el PORTD DDRD= 11111100      */
-	PORTD = 0x00;     /* presentar valor inicial en puerto PORTD= 00000000 */
-
-	UART0_Init(0x01);
-	min = 12;
-	hora = 3;
+	PortConfig();
 	Timer2_OneSecIni();
-	Timer1_Ini();
+	UART0_Init(51);
 
-	while(1){
-		
-//		PORTB &= ~(1<<1); //OE on
-		drawCircle(C, O, 1, L);
-//		drawLetter(32, 19, 'F', 0, 7);
-/*
-		paintPixel(2, 2, 1);
-		paintPixel(27, 16, 2);
-		paintPixel(12, 12, 7);
-*/
-/*
-		drawLetter(30, 19, 'R', 0, 5);
-		drawLetter(26, 19, 'E', 0, 5);
-		drawLetter(22, 19, 'L', 0, 5);
-		drawLetter(18, 19, 'O', 0, 5);
-		drawLetter(14, 19, 'J', 0, 5);
-		drawLetter(9, 19, 'E', 0, 4);
-		drawLetter(5, 19, 'N', 0, 4);
-		
-		drawLetter(30, 25, 'P', 0, 6);
-		drawLetter(26, 25, 'R', 0, 6);
-		drawLetter(22, 25, 'O', 0, 6);
-		drawLetter(18, 25, 'C', 0, 6);
-		drawLetter(14, 25, 'E', 0, 6);
-		drawLetter(10, 25, 'S', 0, 6);
-		drawLetter(6, 25, 'O', 0, 6);
-*/
-		//drawLetter(C-5, O-L+2, 'x', 1, 7);
-		//drawLetter(20, 25, 'E', 0, 7);
-		
-		//drawVerticalLine(C, O-L+2, 3, L-3); // 12
-		/*drawDiagonal2(C-3, O-5, min1, L-3); //1
-		drawDiagonal3(C-5, O-3, min2, L-3);//2
-		drawHorizontalLine(C-5, O, min3, L-2);// 3
-		drawCounterDiagonal3(C, O, min4, L-2);//4
-		drawCounterDiagonal2(C, O, min5, L-2); //5
-		drawVerticalLine(C, O+2, min6, L-2); // 6
-		drawDiagonal2(C, O, min7, L-2);//7
-		drawDiagonal3(C, O, min8, L-2);//8
-		drawHorizontalLine(C+2, O, min9, L-2);//9
-		drawCounterDiagonal3(C+5, O-3, min10, L-3);//10
-		drawCounterDiagonal2(C+3, O-5, min11, L-3); //11
-		
-		drawHorizontalLine(16, 30, mLED1, 1);
-		drawHorizontalLine(16, 30, mLED2, 2);
-		drawHorizontalLine(16, 30, mLED3, 3);
-		drawHorizontalLine(16, 30, mLED4, 4);
-		
-		drawVerticalLine(C, O-L-4, hr12, L-4); // 12
-		drawDiagonal2(C-3, O-5, hr1, L-5); //1
-		drawDiagonal3(C-2, O-2, hr2, L-5);//2
-		*/
+	while(retardo <5)
+	{
+		if( Timer2_Flag () )
+		{
+			retardo++;
+		 	Delay_20mS();
+			if(UART0_kbhit() != 0x00)
+				{
+					retardo = 5;
+					teclazo = 1;
+				}
+		}
+	}
 	
-		//HourHand(C,O,clockMinuteHandMatrix2[m5][0],clockMinuteHandMatrix2[m5][1], 2);	
-		if(m5 == 0 && sec==0){
-			HourHand(C,O,clockMinuteHandMatrix2[m5][0],clockMinuteHandMatrix2[m5][1], 2);
-		}	
-				
-		Line(C+1, O,C+4,O,4);
-		//Line( C, O, C-5,O-4, 5);
-		
-		//Line(C, O, C+5, O-3,7);// 3
-		/*drawCounterDiagonal3(C, O, hr4, L-4);//4
-		drawCounterDiagonal2(C, O, hr5, L-4); //5
-		drawVerticalLine(C, O+2, hr6, L-4); // 6
-		drawDiagonal2(C, O, hr7, L-4);//7
-		drawDiagonal3(C, O, hr8, L-4);//8
-		drawHorizontalLine(C+2, O, hr9, L-4);//9
-		drawCounterDiagonal3(C+5, O-3, hr10, L-5);//10
-		drawCounterDiagonal2(C+3, O-5, hr11, L-5); //11		
+	clrscr();
 
-		min12 = clockMinuteHandMatrix[min][0];
-		hr12 = clockHourHandMatrix[hora][0];
-	*/
-/*
-		mLED1 = minuteLEDMatrix[m5][0];
-		mLED2 = minuteLEDMatrix[m5][1];
-		mLED3 = minuteLEDMatrix[m5][2];
-		mLED4 = minuteLEDMatrix[m5][3];
-*/
+	if (teclazo == 1){
+		menu();
+	}
+
+	else{
+		Clock_Ini(0,0,0);
+	}
+
+	current = CurrentTime();
+	Timer1_Ini();
+	address = TEXT_ADDRESS;
+	mode_flag =3;
+	while(count <8){
+		marquee[count] = EEPROM_Read(address);
+		count++;
+		address++;	
+	}
+	
+	
+	while(1){
+	
+		if(modes==0){
+			if(button_pressed()){
+				
+				mode_flag++;
+				switch(mode_flag){
+					case 1:{//if(mode_flag==1){
+						//mode_flag=0;
+						CleanMatrix();
+						O = 15;
+						L = 14;
+						break;
+					}
+				//else{
+					case 2:{
+						CleanMatrix();
+						O = CIRCLEY0;
+						L = CIRCLER;
+						break;
+					}
+					case 3:{//if(mode_flag==1){
+						//mode_flag=0;
+						CleanMatrix();
+						O = 15;
+						L = 14;
+						seconds = 0;
+						secs = 0;
+						minutes5 = 0;
+						break;
+					}
+					default:{
+						CleanMatrix();
+						mode_flag =0;
+						break;
+					}
+
+				}
+			}
+		}
+		
+		if(modes ==1){
+			if(button_pressed()){
+				if(current.hora >=11){
+					Clock_Ini(0,current.minu,current.segu);
+				}
+			
+				else{
+					Clock_Ini(current.hora+1,current.minu,current.segu);
+				}
+			}	
+
+			if(button_pressed2()){
+				if(current.minu >=59){
+					Clock_Ini(0,current.minu,current.segu);
+				}
+			
+				else{	
+					Clock_Ini(current.hora,current.minu+1,current.segu);
+				}
+			}			
+		}
+		if(button_pressed3()){
+			if(modes == 1){
+				modes =0;
+			}
+			else{
+				modes =1;
+			}		
+		}
+
+		if(mode_flag ==1){
+			drawCircle(C, 15, 1, 14);
+		}
+		
+		if(mode_flag ==2){
+			drawCircle(C, O, 1, L);
+			for(count=0;count<8;count++){		
+				drawLetter(32+advance-4*count, 25, marquee[count], 6);
+			}
+		
+		}	
+		if(mode_flag !=3){
+			MinuteHand(C,O,clockMinuteHandMatrix[current.minu][0],clockMinuteHandMatrix[current.minu][1], 2);
+			HourHand(C,O,clockHourHandMatrix[current.hora][0],clockHourHandMatrix[current.hora][1], 4);
+		}		
+
 		if(Timer2_Flag()){
 			SecondPassed(C, O);
 		
 			Clock_Update();
-			sec++;
-			i++;
+			gotoxy(6,10);
+			Clock_Display();
+			current = CurrentTime();
+			advance++;
+
+			if(mode_flag == 3){
+				seconds++;
+				secs++;
+				if(secs == 60){
+					minutes5++;	
+					secs = 0;
+				}
 		
-			if (sec == 60){
-				m5++;
-				HourHand(C,O,clockMinuteHandMatrix2[m5][0],clockMinuteHandMatrix2[m5][1], 2);
-				sec=1;
-			}
-			if(i == 8){
+				if(minutes5 == 0 && seconds <=30){
+					for(count=0;count<8;count++){		
+						drawLetter(31+seconds-4*count, 10, marquee[count], 6);
+					}
 				
-				i=1;
+				}
+				
+				if(seconds ==30){
+					done =1;
+					CleanMatrix();
+				}
+				
+				if(minutes5 < 5 && seconds >=30 && done == 1){
+					drawCircle(C, O, 1, L);
+					MinuteHand(C,O,clockMinuteHandMatrix[current.minu][0],clockMinuteHandMatrix[current.minu][1], 2);
+					HourHand(C,O,clockHourHandMatrix[current.hora][0],clockHourHandMatrix[current.hora][1], 4);
+				}
+				
+				if(minutes5>=5){
+					minutes5 =0;
+					done =0;
+					seconds = 0;
+					CleanMatrix();
+				}
 			}
-			if(m5 == 12){
-				min++;
-				m5=0;
-			}
-		}
-		
-		
-/*
-		min1 = clockMinuteHandMatrix[min][1];
-		min2 = clockMinuteHandMatrix[min][2];
-		min3 = clockMinuteHandMatrix[min][3];
-		min4 = clockMinuteHandMatrix[min][4];
-		min5 = clockMinuteHandMatrix[min][5];
-		min6 = clockMinuteHandMatrix[min][6];
-		min7 = clockMinuteHandMatrix[min][7];
-		min8 = clockMinuteHandMatrix[min][8];
-		min9 = clockMinuteHandMatrix[min][9];
-		min10 = clockMinuteHandMatrix[min][10];
-		min11 = clockMinuteHandMatrix[min][11];
-		min12 = clockMinuteHandMatrix[min][0];
 
-		if(min==12)
-		{
-			hora++;
-			min=0;
 		}
-
-		hr1 = clockHourHandMatrix[hora][1];
-		hr2 = clockHourHandMatrix[hora][2];
-		hr3 = clockHourHandMatrix[hora][3];
-		hr4 = clockHourHandMatrix[hora][4];
-		hr5 = clockHourHandMatrix[hora][5];
-		hr6 = clockHourHandMatrix[hora][6];
-		hr7 = clockHourHandMatrix[hora][7];
-		hr8 = clockHourHandMatrix[hora][8];
-		hr9 = clockHourHandMatrix[hora][9];
-		hr10 = clockHourHandMatrix[hora][10];
-		hr11 = clockHourHandMatrix[hora][11];
-		hr12 = clockHourHandMatrix[hora][0];
-*/
-		if(hora==12)
-		{
-			hora=0;
-		}		
 	
 	}
 	return 0; 
@@ -274,3 +226,28 @@ void SecondPassed(uint8_t x, uint8_t y){
 		paintPixel(x, y, 8);
 		PORTB &= ~(1<<2);
 }
+
+int button_pressed()
+{
+	return !(PINB & (1<<PORTB0));
+	Delay_20mS();
+	Delay_20mS();
+//	Delay_20mS();
+}
+
+int button_pressed2()
+{
+	return !(PINB & (1<<PORTB4));
+	Delay_20mS();
+	Delay_20mS();
+//	Delay_20mS();
+}
+
+int button_pressed3()
+{
+	return !(PINB & (1<<PORTB5));
+	Delay_20mS();
+	Delay_20mS();
+	//Delay_20mS();
+}
+

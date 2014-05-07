@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 uint8_t *ptr;
+
 uint8_t matrixBuffer[32][32] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -42,35 +43,52 @@ uint8_t matrixBuffer[32][32] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 
-static volatile uint8_t i =0;
-static volatile uint8_t j =0;
+static volatile uint8_t i,m =0;
+static volatile uint8_t j,n =0;
 
-static volatile uint8_t lastX =0;
-static volatile uint8_t lastY =0;
+static volatile uint8_t lastX,lastXH =0;
+static volatile uint8_t lastY, lastYH =0;
 
 void CleanMatrix(){
 
-	memset(matrixBuffer,0,sizeof(matrixBuffer));
+	//memset(matrixBuffer,0,sizeof(matrixBuffer));
+	for(m=0;m<32;m++){
+		for(n=0;n<32;n++){
+		matrixBuffer[n][m]=0;
+		}
+	}
 }
+void CleanMessage(){
+	for(m=0;m<32;m++){
+		for(n=25;n<32;n++){
+		matrixBuffer[n][m]=0;
+		}
+	}
+}
+
 void paintPixel(uint8_t x, uint8_t y, uint8_t color){
 
 	ptr = &matrixBuffer[0][0];
 	ptr[x+(32 * y)] =color;
 }
 
-void drawLetter(uint8_t x0, uint8_t y0, uint16_t letter, uint8_t lettercase,uint8_t color){
+void drawLetter(uint8_t x0, uint8_t y0, uint16_t letter,uint8_t color){
 
-	if(lettercase ==0){
-		letter = (letter-65)*(5);
+	uint16_t lettercase;
+	if (letter == 0){
+		lettercase =320;
+		}
+	if(letter >=65 && letter <=90){
+		lettercase = (letter-65)*(5);
 	}
-	if(lettercase ==1){
-		letter = (letter-70)*(5) -5;
+	if(letter >=97 && letter <=122){
+		lettercase = (letter-70)*(5) -5;
 	}
-	if(lettercase ==2){
-		letter = 260+(letter*5);
+	if(letter >=30 && letter <=39){
+		lettercase = 212+(letter*5);
 	}
-	if(lettercase ==3){
-		letter = 260+((letter-48)*5);
+	if(letter >=47 && letter <=57){
+		lettercase = 260+((letter-47)*5);
 	}
 
 	uint8_t i,j=0;
@@ -78,11 +96,12 @@ void drawLetter(uint8_t x0, uint8_t y0, uint16_t letter, uint8_t lettercase,uint
 	for(i=0;i<5;i++){
 		for(j=0;j<5;j++){
 			PORTB &= ~(1<<2);
-			paintPixel(x0-j,y0+i,(pgm_read_byte(&letters[letter+i][j]))+color);
+			paintPixel(x0-j,y0+i,(pgm_read_byte(&letters[lettercase+i][j]))+color);
 			PORTB |= (1<<2);
 		}
 	}
 }
+
 
 void swap(int *a, int *b){
 	int c;
@@ -161,6 +180,19 @@ void Display(){
 	PORTB &= ~(1<<1); //OE on	
 	
 }
+
+void MinuteHand(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1,uint8_t color){
+
+	if(lastXH!=0 && lastYH !=0){	
+		Line(x0,y0,lastXH,lastYH,0);
+	}	
+
+	Line(x0,y0,x1,y1,color);
+	
+	lastXH = x1;
+	lastYH = y1;
+}
+
 
 void HourHand(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1,uint8_t color){
 

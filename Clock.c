@@ -18,7 +18,6 @@ void Clock_Update(){
 	if( seg > 59 ){
 		seg = 0;
 		min++;
-	//	paintPixel(min,5,1);
 		if( min > 59 ){
 			min = 0;
 			hrs++;

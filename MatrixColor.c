@@ -1,9 +1,10 @@
 #include <avr/io.h>
 #include <inttypes.h>
 #include "MatrixColor.h"
-
+		
 void setColorPixel(uint8_t color){ //1 Red, 2 Green, 3 Blue, 4 yellow-ish, 5 Purple-ish, 6 Light Blue, 7 White
 	
+
 	switch(color){
 		case 1 :
 
