@@ -11,7 +11,7 @@ MatrixGraphs.o: ../MatrixGraphs.c \
   c:/winavr-20071221/bin/../avr/include/avr/lock.h ../MatrixColor.h \
   c:/winavr-20071221/bin/../avr/include/avr/pgmspace.h \
   c:\winavr-20071221\bin\../lib/gcc/avr/4.2.2/include/stddef.h \
-  ../MatrixGraphs.h ../Alphabet.h ../EEPROM.h \
+  ../MatrixGraphs.h ../Matrix.h ../Alphabet.h ../EEPROM.h \
   c:/winavr-20071221/bin/../avr/include/string.h \
   c:/winavr-20071221/bin/../avr/include/stdlib.h
 
@@ -42,6 +42,8 @@ c:/winavr-20071221/bin/../avr/include/avr/pgmspace.h:
 c:\winavr-20071221\bin\../lib/gcc/avr/4.2.2/include/stddef.h:
 
 ../MatrixGraphs.h:
+
+../Matrix.h:
 
 ../Alphabet.h:
 

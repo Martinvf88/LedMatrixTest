@@ -8,12 +8,12 @@ LedMatrixTest.o: ../LedMatrixTest.c \
   c:/winavr-20071221/bin/../avr/include/avr/common.h \
   c:/winavr-20071221/bin/../avr/include/avr/version.h \
   c:/winavr-20071221/bin/../avr/include/avr/fuse.h \
-  c:/winavr-20071221/bin/../avr/include/avr/lock.h \
-  c:/winavr-20071221/bin/../avr/include/math.h ../MatrixColor.h \
+  c:/winavr-20071221/bin/../avr/include/avr/lock.h ../MatrixGraphs.h \
+  ../ClockCoordinates.h \
   c:/winavr-20071221/bin/../avr/include/avr/pgmspace.h \
   c:\winavr-20071221\bin\../lib/gcc/avr/4.2.2/include/stddef.h \
-  ../MatrixGraphs.h ../ClockCoordinates.h ../Timer2.h ../Timer1.h \
-  ../Configuration.h ../Delay20.h ../Clock.h ../Menu.h ../EEPROM.h
+  ../Timer2.h ../Timer1.h ../Configuration.h ../Delay20.h ../Clock.h \
+  ../Menu.h ../EEPROM.h
 
 c:/winavr-20071221/bin/../avr/include/avr/io.h:
 
@@ -35,17 +35,13 @@ c:/winavr-20071221/bin/../avr/include/avr/fuse.h:
 
 c:/winavr-20071221/bin/../avr/include/avr/lock.h:
 
-c:/winavr-20071221/bin/../avr/include/math.h:
+../MatrixGraphs.h:
 
-../MatrixColor.h:
+../ClockCoordinates.h:
 
 c:/winavr-20071221/bin/../avr/include/avr/pgmspace.h:
 
 c:\winavr-20071221\bin\../lib/gcc/avr/4.2.2/include/stddef.h:
-
-../MatrixGraphs.h:
-
-../ClockCoordinates.h:
 
 ../Timer2.h:
 

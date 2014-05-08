@@ -25,15 +25,9 @@ uint8_t Timer1_Flag ( void ){
 }
 
 ISR(TIMER1_OVF_vect, ISR_BLOCK){
-	
-	Display();
-	
+
+	Display();	
 	TIFR1 |= TOV1;
 	
-	/*if(!Timer1_Flag()){
-	PORTB &= ~(1<<3); //SCLK OFF
-	Flag =1;
-	}*/
 }
 
-/*    */

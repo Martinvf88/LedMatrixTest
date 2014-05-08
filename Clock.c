@@ -28,6 +28,19 @@ void Clock_Update(){
 	}
 }
 
+void ClockCheck(){
+	if( min > 59 ){
+		min = 0;
+		hrs++;
+		if( hrs > 11 ){
+			hrs = 0;
+		}
+	}
+
+	if( hrs > 11 ){
+			hrs = 0;
+		}
+}
 
 void Clock_Display(){
 //Escribe horas

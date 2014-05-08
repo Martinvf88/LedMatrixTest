@@ -2,46 +2,13 @@
 #include <inttypes.h>
 #include "MatrixColor.h"
 #include "MatrixGraphs.h"
+#include "Matrix.h"
 #include "Alphabet.h"
 #include "EEPROM.h"
 #include <string.h>
 #include <stdlib.h>
 
 uint8_t *ptr;
-
-uint8_t matrixBuffer[32][32] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-								{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-
 
 static volatile uint8_t i,m =0;
 static volatile uint8_t j,n =0;
@@ -50,18 +17,21 @@ static volatile uint8_t lastX,lastXH =0;
 static volatile uint8_t lastY, lastYH =0;
 
 void CleanMatrix(){
-
+	ptr = &matrixBuffer[0][0];
 	//memset(matrixBuffer,0,sizeof(matrixBuffer));
 	for(m=0;m<32;m++){
 		for(n=0;n<32;n++){
-		matrixBuffer[n][m]=0;
+			ptr[m+(32 * n)] =0;
+	//	matrixBuffer[n][m]=0;
 		}
 	}
 }
 void CleanMessage(){
+	ptr = &matrixBuffer[0][0];
 	for(m=0;m<32;m++){
 		for(n=25;n<32;n++){
-		matrixBuffer[n][m]=0;
+		//matrixBuffer[n][m]=0;
+		ptr[m+(32 * n)] =0;
 		}
 	}
 }
@@ -102,6 +72,37 @@ void drawLetter(uint8_t x0, uint8_t y0, uint16_t letter,uint8_t color){
 	}
 }
 
+void drawRoman(uint8_t x0, uint8_t y0, uint8_t letter,uint8_t color){
+
+	uint16_t lettercase = 0;
+	switch(letter){
+
+		case 'X':{
+			lettercase =0;
+			break;
+		}
+
+		case 'I':{
+			lettercase =3;
+			break;
+		}
+
+		case 'V':{
+			lettercase =6;
+			break;
+		}
+	}
+	
+	uint8_t i,j=0;
+	
+	for(i=0;i<3;i++){
+		for(j=0;j<3;j++){
+			PORTB &= ~(1<<2);
+			paintPixel(x0-j,y0+i,(pgm_read_byte(&romans[lettercase+i][j]))+color);
+			PORTB |= (1<<2);
+		}
+	}
+}
 
 void swap(int *a, int *b){
 	int c;
@@ -149,7 +150,7 @@ void Display(){
 	
 	PORTC = i;
 	PORTB |= (1<<2);
-	PORTB |= (1<<1); //OE on	
+	PORTB |= (1<<1); //OE off	
 		for(j=0;j<32;j++){
 			setColorPixel(matrixBuffer[i][31-j]);
 			if (i <= 15){
@@ -209,74 +210,11 @@ void HourHand(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1,uint8_t color){
 
 void drawSquare(uint8_t x0, uint8_t y0, uint8_t color, uint8_t length){
 
-	PORTB &= ~(1<<2);
-	drawHorizontalLine(x0, y0, color, length);
-	PORTB |= (1<<2);
-	PORTB &= ~(1<<2);
-	drawHorizontalLine(x0, y0+length-1, color, length);
-	PORTB |= (1<<2);
-	PORTB &= ~(1<<2);
-	drawVerticalLine(x0, y0, color, length);
-	PORTB |= (1<<2);
-	PORTB &= ~(1<<2);
-	drawVerticalLine(x0+length-1, y0, color, length);
-	PORTB |= (1<<2);
-}
-
-void drawHorizontalLine(uint8_t x0, uint8_t y0, uint8_t color, uint8_t x1){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<x1; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		PORTB &= ~(1<<2);
-		paintPixel(x0+i,y0,color);
-		PORTB |= (1<<2);
-		//PORTB |= (1<<3); //SCLK on
-	
-	}
-
-}
-
-void drawVerticalLine(uint8_t x0, uint8_t y0, uint8_t color, uint8_t x1){
-
-	//setColorPixel(color);
-	if (y0 <= 15){
-				
-		PORTD &= ~(1<<5); //R1
-		PORTD &= ~(1<<6); //G1
-		PORTD &= ~(1<<7); //B1
-	}
-
-	else {
-	
-		PORTD &= ~(1<<2); //R0
-		PORTD &= ~(1<<3); //G0
-		PORTD &= ~(1<<4); //B0
-		
-		}
-	for(i=0; i<x1; i++){
-		//PORTB &= ~(1<<3); //SCLK on
-		PORTB &= ~(1<<2);
-		paintPixel(x0,y0+i,color);
-		PORTB |= (1<<2);
-		//PORTB |= (1<<3); //SCLK on
-	
-	}
-
+	Line(x0, y0, x0-length, y0, color);
+	Line(x0, y0, x0, y0+length, color);
+	Line(x0-length, y0, x0-length, y0+length, color);
+	Line(x0+length, y0, x0+length, y0+length, color);
+	Line(x0, y0+length, x0-length, y0+length, color);
 }
 
 void drawCircle(int16_t x0, int16_t y0, int16_t color, uint16_t r) {
